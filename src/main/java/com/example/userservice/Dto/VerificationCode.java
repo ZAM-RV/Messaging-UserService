@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Data
@@ -16,8 +17,10 @@ public class VerificationCode {
     private String id;
     @NotNull
     private User user;
-    @Digits(integer = 6, fraction = 0, message = "Verification Code must be 6 digits long")
-    private int verificationCode;
-    private Date creationDate;
+    @Size(min = 6, max = 6, message = "Verification Code must be 6 digits long")
+    private String verificationCode;
+    @Builder.Default
+    private Date creationDate = new Date();
     private int timeoutInMinutes;
 }
+

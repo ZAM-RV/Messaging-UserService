@@ -2,6 +2,7 @@ package com.example.userservice.Controller;
 
 import com.example.userservice.Dto.User;
 import com.example.userservice.Repository.UserRepository;
+import com.example.userservice.Services.Helpers.RegisterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,12 @@ import java.net.http.HttpResponse;
 @Slf4j
 public class RegistrationController {
 
-    private UserRepository userRepository;
+
+    private RegisterService registerService;
 
     @Autowired
-    public RegistrationController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public RegistrationController(RegisterService registerService) {
+        this.registerService = registerService;
     }
 
     @PostMapping
@@ -36,8 +38,8 @@ public class RegistrationController {
             log.warn("User is empty, bad request ");
             return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
         }
-        user.setUserStatus(User.Status.PENDING);
-        userRepository.save(user);
+
+        registerService.registerNewUser(user);
         log.info("User has been successfully written to the database");
         return new ResponseEntity<User>(HttpStatus.OK);
 
