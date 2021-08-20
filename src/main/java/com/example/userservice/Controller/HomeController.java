@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+
 @RestController
 @RequestMapping("/")
 public class HomeController {
@@ -31,11 +35,13 @@ public class HomeController {
 
          */
         System.out.println("I have hit the home controller");
-        User testUser = new User();
-        testUser.setFirstName("kage");
-        testUser.setLastName("Goru");
-        testUser.setEmail("kage@hotmail.com");
-
+        User testUser = User.builder()
+                .firstName("Smith")
+                .lastName("Johnson")
+                .email("Jsmith@hotmail.com")
+                .password("Jsmith123")
+                .dateOfBirth(LocalDate.of(1990,5,3))
+                .build();
         userRepository.save(testUser);
         System.out.println("I have saved");
         return "<h1>Hello World</h1>";
