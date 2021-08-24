@@ -1,6 +1,6 @@
 package com.example.userservice;
 
-import com.example.userservice.Services.Helpers.GenerateVerificationCode;
+import com.example.userservice.Services.Registration.VerificationCodeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,7 +13,7 @@ class MessagingUserServiceApplicationTests {
 
     @Test
     void checkValidationCode(){
-        String number = GenerateVerificationCode.generateRandomCode();
+        String number = VerificationCodeService.generateRandomCode();
 
         System.out.println(number);
         assert(1==1);

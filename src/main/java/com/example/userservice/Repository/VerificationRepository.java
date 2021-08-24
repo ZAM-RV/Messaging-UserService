@@ -6,4 +6,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface VerificationRepository extends MongoRepository<VerificationCode, String> {
 
+    VerificationCode findVerificationCodeByUser(User user);
+
+    boolean deleteByUser(User user);
+
 }

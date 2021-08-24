@@ -1,5 +1,8 @@
 package com.example.userservice;
 
+import com.example.userservice.Services.Registration.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +11,15 @@ import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventL
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @SpringBootApplication
-public class MessagingUserServiceApplication {
+public class MessagingUserServiceApplication implements CommandLineRunner {
+
+    @Autowired
+    EmailService emailService;
+
+    @Override
+    public void run(String... args) throws Exception {
+        emailService.sendEmailWithAttachment("zakmadar@gmail.com", "654321");
+    }
 
     @Bean
     public LocalValidatorFactoryBean localValidatorFactoryBean() {

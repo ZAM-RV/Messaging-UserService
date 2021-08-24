@@ -7,6 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,7 @@ public class User{
     private String lastName;
 
     @NotNull
-    private LocalDate dateOfBirth;
+    private Date dateOfBirth;
 
     @NotNull
     @Email(message = "Please provide a valid email address")
