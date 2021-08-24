@@ -11,15 +11,7 @@ import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventL
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @SpringBootApplication
-public class MessagingUserServiceApplication implements CommandLineRunner {
-
-    @Autowired
-    EmailService emailService;
-
-    @Override
-    public void run(String... args) throws Exception {
-        emailService.sendEmailWithAttachment("zakmadar@gmail.com", "654321");
-    }
+public class MessagingUserServiceApplication {
 
     @Bean
     public LocalValidatorFactoryBean localValidatorFactoryBean() {

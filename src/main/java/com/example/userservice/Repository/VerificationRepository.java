@@ -8,6 +8,6 @@ public interface VerificationRepository extends MongoRepository<VerificationCode
 
     VerificationCode findVerificationCodeByUser(User user);
 
-    boolean deleteByUser(User user);
+    Long deleteByUser(User user);
 
 }

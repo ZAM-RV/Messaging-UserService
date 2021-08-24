@@ -32,7 +32,8 @@ public class RegistrationController {
     public ResponseEntity<User> register(@Valid @RequestBody User user, Errors errors){
         log.info("The Register Controller has been called");
         if(user == null || errors.hasErrors()){
-            log.warn("User is empty, bad request ");
+            log.warn("User is empty or User Data is not sufficient");
+            log.warn(errors.toString());
             return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
         }
 

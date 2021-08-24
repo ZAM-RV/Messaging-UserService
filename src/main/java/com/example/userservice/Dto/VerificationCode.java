@@ -23,6 +23,6 @@ public class VerificationCode {
     private String verificationCode;
     @Builder.Default
     private Instant creationTimeStamp = new Timestamp(System.currentTimeMillis()).toInstant();
-    private int timeoutInMinutes;
+    private long timeoutInMinutes;
 }
 
