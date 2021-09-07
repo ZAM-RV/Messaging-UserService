@@ -6,6 +6,7 @@ import com.example.userservice.Repository.UserRepository;
 import com.example.userservice.Repository.VerificationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -31,6 +32,7 @@ public class RegisterService {
         user.setUserStatus(User.Status.PENDING);
         String email = user.getEmail().toLowerCase(Locale.ROOT);
         user.setEmail(email);
+        user.setPassword(new StandardPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
 
         verifyNewUser(user);

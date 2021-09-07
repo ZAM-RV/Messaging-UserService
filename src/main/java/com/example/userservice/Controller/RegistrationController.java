@@ -55,4 +55,10 @@ public class RegistrationController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/hello")
+    public ResponseEntity<String> hello(@RequestBody String email){
+        String retr= "Heeloooo";
+        return new ResponseEntity<String>("yoooo" +email,HttpStatus.OK);
+    }
 }
