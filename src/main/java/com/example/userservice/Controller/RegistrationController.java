@@ -6,6 +6,7 @@ import com.example.userservice.Services.Registration.RegisterService;
 import com.example.userservice.Services.Registration.VerificationCodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -55,9 +56,8 @@ public class RegistrationController {
         }
     }
 
-    @PostMapping("/hello")
-    public ResponseEntity<String> hello(@RequestBody String email){
-        String retr= "Heeloooo";
-        return new ResponseEntity<String>("yoooo" +email,HttpStatus.OK);
+    @GetMapping("/hello")
+    public ResponseEntity<String> hello(@RequestParam String email){
+        return new ResponseEntity<>("yoooo   " +email,HttpStatus.OK);
     }
 }
