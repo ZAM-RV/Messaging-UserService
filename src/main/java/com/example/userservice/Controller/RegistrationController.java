@@ -19,8 +19,8 @@ import javax.validation.Valid;
 public class RegistrationController {
 
 
-    private RegisterService registerService;
-    private VerificationCodeService verificationCodeService;
+    private final RegisterService registerService;
+    private final VerificationCodeService verificationCodeService;
 
     @Autowired
     public RegistrationController(RegisterService registerService, VerificationCodeService verificationCodeService) {
@@ -40,7 +40,6 @@ public class RegistrationController {
         registerService.registerNewUser(user);
         log.info("User has been successfully written to the database");
         return new ResponseEntity<User>(HttpStatus.OK);
-
     }
 
     @PostMapping("/resend")
