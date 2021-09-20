@@ -2,6 +2,7 @@ package com.example.userservice.Config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,12 +26,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService);
     }
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
 
         http.authorizeRequests()
+                .antMatchers("/register/hello")
+                .hasAuthority("PENDING_USER")
+                .antMatchers("/validate", "/validate/**")
+                .hasAuthority("PENDING_USER")
+                .antMatchers("/")
+                .hasAuthority("ACTIVE_USER")
                 .antMatchers("/register")
                 .permitAll().anyRequest().authenticated();
+
+        http.httpBasic(withDefaults());
+
     }
 }

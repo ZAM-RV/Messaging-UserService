@@ -16,14 +16,11 @@ import java.util.Locale;
 public class RegisterService {
 
     private UserRepository userRepository;
-    private VerificationRepository verificationRepository;
-    private EmailService emailService;
+    private VerificationCodeService verificationCodeService;
 
     @Autowired
-    public RegisterService(UserRepository userRepository, VerificationRepository verificationRepository, EmailService emailService) {
+    public RegisterService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.verificationRepository = verificationRepository;
-        this.emailService = emailService;
     }
 
     public void registerNewUser(User user){
@@ -36,22 +33,6 @@ public class RegisterService {
         user.setEmail(email);
         userRepository.save(user);
 
-        verifyNewUser(user);
-    }
-
-    public void verifyNewUser(User user){
-        VerificationCode verificationCode = VerificationCode.builder()
-                .user(user)
-                .timeoutInMinutes(30)
-                .verificationCode(VerificationCodeService.generateRandomCode())
-                .build();
-
-        verificationRepository.save(verificationCode);
-
-        try{
-            emailService.sendEmail(user.getEmail(),verificationCode.getVerificationCode());
-        } catch (MessagingException e){
-            log.warn("Email has failed to be sent to the recipient", e);
-        }
+        verificationCodeService.verifyNewUser(user);
     }
 }

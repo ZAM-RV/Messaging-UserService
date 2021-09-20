@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.naming.AuthenticationException;
 import javax.security.auth.message.AuthException;
 import java.sql.Timestamp;
@@ -24,12 +25,15 @@ import java.util.concurrent.TimeUnit;
 public class VerificationCodeService {
 
     private final UserRepository userRepository;
-    private final  VerificationRepository verificationRepository;
+    private final VerificationRepository verificationRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public VerificationCodeService(UserRepository userRepository, VerificationRepository verificationRepository) {
+    public VerificationCodeService(UserRepository userRepository, VerificationRepository verificationRepository,
+                                   EmailService emailService) {
         this.userRepository = userRepository;
         this.verificationRepository = verificationRepository;
+        this.emailService = emailService;
     }
 
     public void resendVerification(String email){
@@ -39,6 +43,8 @@ public class VerificationCodeService {
         oldVerificationCode.setVerificationCode(generateRandomCode());
 
         verificationRepository.save(oldVerificationCode);
+
+        sendEmailToUser(email, oldVerificationCode);
     }
 
     public void validateVerificationCode(ValidateEntity validateEntity) throws AuthenticationException{
@@ -80,5 +86,26 @@ public class VerificationCodeService {
         User currentUser = userRepository.findUsersByEmail(email);
         log.info("User has been found with email "+email);
         return verificationRepository.findVerificationCodeByUser(currentUser);
+    }
+
+
+    public void verifyNewUser(User user){
+        VerificationCode verificationCode = VerificationCode.builder()
+                .user(user)
+                .timeoutInMinutes(30)
+                .verificationCode(VerificationCodeService.generateRandomCode())
+                .build();
+
+        verificationRepository.save(verificationCode);
+
+        sendEmailToUser(user.getEmail(), verificationCode);
+    }
+
+    public void sendEmailToUser(String email, VerificationCode verificationCode){
+        try{
+            emailService.sendEmail(email,verificationCode.getVerificationCode());
+        } catch (MessagingException e){
+            log.warn("Email has failed to be sent to the recipient", e);
+        }
     }
 }

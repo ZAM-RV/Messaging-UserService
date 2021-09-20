@@ -43,19 +43,6 @@ public class RegistrationController {
         return new ResponseEntity<User>(HttpStatus.OK);
     }
 
-    @PostMapping("/resend")
-    public ResponseEntity<String> resend(@RequestBody String email){
-        try{
-            log.info("Resetting the verification code for "+ email);
-            verificationCodeService.resendVerification(email);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-            log.info("There has been an issue, resetting the verification code for the email "+email);
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @GetMapping("/hello")
     public ResponseEntity<String> hello(@RequestParam String email){
         return new ResponseEntity<>("yoooo   " +email,HttpStatus.OK);

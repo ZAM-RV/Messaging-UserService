@@ -1,4 +1,4 @@
-package com.example.userservice.Services.Login;
+package com.example.userservice.Security;
 
 import com.example.userservice.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,13 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+
+        try{
+            UserDetails test = userRepository.findUsersByEmail(s);
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
         return userRepository.findUsersByEmail(s);
     }
 }

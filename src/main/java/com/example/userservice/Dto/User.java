@@ -47,7 +47,11 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("USER"));
+        if(userStatus == null){
+            return Arrays.asList(new SimpleGrantedAuthority("DISABLED_USER"));
+        }
+
+        return Arrays.asList(new SimpleGrantedAuthority(userStatus.toString()+"_USER"));
     }
 
     @Override
