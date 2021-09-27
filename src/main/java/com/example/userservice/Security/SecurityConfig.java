@@ -46,6 +46,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         http.authorizeRequests()
+                .antMatchers("/friend/allusers")
+                .hasAuthority("ACTIVE_USER");
+
+        http.authorizeRequests()
                 .antMatchers("/register/hello")
                 .hasAuthority("PENDING_USER")
                 .antMatchers("/validate", "/validate/**")
@@ -54,6 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAuthority("ACTIVE_USER")
                 .antMatchers("/register","/login")
                 .permitAll().anyRequest().authenticated();
+
+
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

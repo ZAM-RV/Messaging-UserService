@@ -83,8 +83,10 @@ public class VerificationCodeService {
     }
 
     public VerificationCode getVerificationCodeByEmail(String email){
+        log.info("THIS IS THE EMAIL: "+ email);
         User currentUser = userRepository.findUsersByEmail(email);
         log.info("User has been found with email "+email);
+        log.info(currentUser.toString());
         return verificationRepository.findVerificationCodeByUser(currentUser);
     }
 
