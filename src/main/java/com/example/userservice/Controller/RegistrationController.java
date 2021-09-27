@@ -1,9 +1,11 @@
 package com.example.userservice.Controller;
 
+import com.example.userservice.Dto.ResponseDto;
 import com.example.userservice.Dto.User;
 import com.example.userservice.Dto.VerificationCode;
 import com.example.userservice.Services.Registration.RegisterService;
 import com.example.userservice.Services.Registration.VerificationCodeService;
+import com.example.userservice.Util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -22,15 +24,17 @@ public class RegistrationController {
 
     private final RegisterService registerService;
     private final VerificationCodeService verificationCodeService;
+    private JwtUtil jwtUtil;
 
     @Autowired
-    public RegistrationController(RegisterService registerService, VerificationCodeService verificationCodeService) {
+    public RegistrationController(RegisterService registerService, VerificationCodeService verificationCodeService, JwtUtil jwtUtil) {
         this.registerService = registerService;
         this.verificationCodeService = verificationCodeService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping
-    public ResponseEntity<User> register(@Valid @RequestBody User user, Errors errors){
+    public ResponseEntity<?> register(@Valid @RequestBody User user, Errors errors){
         log.info("The Register Controller has been called");
         if(user == null || errors.hasErrors()){
             log.warn("User is empty or User Data is not sufficient");
@@ -40,7 +44,8 @@ public class RegistrationController {
 
         registerService.registerNewUser(user);
         log.info("User has been successfully written to the database");
-        return new ResponseEntity<User>(HttpStatus.OK);
+        String token = jwtUtil.generateToken(user);
+        return new ResponseEntity<>(new ResponseDto(token),HttpStatus.OK);
     }
 
     @GetMapping("/hello")
