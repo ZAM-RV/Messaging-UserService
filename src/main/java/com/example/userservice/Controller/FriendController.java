@@ -1,22 +1,17 @@
 package com.example.userservice.Controller;
 
+import com.example.userservice.Dto.FriendDto.OtherUser;
 import com.example.userservice.Dto.User;
-import com.example.userservice.Dto.UserViews;
-import com.example.userservice.Repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.example.userservice.Services.Friends.FriendsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -24,22 +19,27 @@ import java.util.List;
 @Slf4j
 public class FriendController {
 
-    final UserRepository userRepository;
+    private FriendsService friendsService;
 
     @Autowired
-    public FriendController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public FriendController(FriendsService friendsService) {
+        this.friendsService = friendsService;
     }
 
-    @GetMapping("/allusers")
-    public ResponseEntity<?> getAllUsers(@AuthenticationPrincipal Principal principal) throws JsonProcessingException {
-        List<User> users = userRepository.findAll();
+    @GetMapping("/activeUsers")
+    public ResponseEntity<?> getAllUsers(@AuthenticationPrincipal User principal) {
+        List<OtherUser> users = friendsService.findActiveUser(principal.username());
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        String allUsers = mapper.writerWithView(UserViews.NoFriendView.class).writeValueAsString(users.get(0));
+    @PostMapping("/sendrequest")
+    public ResponseEntity<?> addFriend(@RequestParam("username") String friendsUsername, @AuthenticationPrincipal User principal) {
+        if(friendsUsername == null) {
+            return new ResponseEntity<String>("There is no username in this friend request",HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<>(allUsers, HttpStatus.OK);
+        friendsService.sendFriendRequest(principal.username(), friendsUsername);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

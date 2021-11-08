@@ -1,6 +1,7 @@
 package com.example.userservice.Dto;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,28 +28,28 @@ public class User implements UserDetails {
     private String id;
 
     @NotBlank
-    @JsonView(UserViews.FriendView.class)
+    @Accessors(fluent = true)
+    private String username;
+
+    @NotBlank
     private String firstName;
 
-    @NotNull
-    @JsonView(UserViews.FriendView.class)
+    @NotBlank
     private String lastName;
 
-    @NotNull
+    @NotBlank
     private Date dateOfBirth;
 
-    @NotNull
+    @NotBlank
     @Email(message = "Please provide a valid email address")
-    @JsonView(UserViews.NoFriendView.class)
     private String email;
 
-    @NotNull
+    @NotBlank
     @Size(min = 6, message = "password must at least be 6 characters long")
     private String password;
 
     private Status userStatus;
 
-    @JsonView(UserViews.FriendView.class)
     private List<String> friends;
 
     @Override

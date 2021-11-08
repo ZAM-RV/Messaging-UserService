@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAuthority("PENDING_USER")
                 .antMatchers("/validate", "/validate/**")
                 .hasAuthority("PENDING_USER")
-                .antMatchers("/")
+                .antMatchers("/","/friend/**")
                 .hasAuthority("ACTIVE_USER")
                 .antMatchers("/register","/login")
                 .permitAll().anyRequest().authenticated();
