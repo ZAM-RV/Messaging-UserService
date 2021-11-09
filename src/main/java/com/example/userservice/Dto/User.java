@@ -14,10 +14,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Document(collection = "users")
 @Data
@@ -37,7 +34,6 @@ public class User implements UserDetails {
     @NotBlank
     private String lastName;
 
-    @NotBlank
     private Date dateOfBirth;
 
     @NotBlank
@@ -88,6 +84,20 @@ public class User implements UserDetails {
         }
         return true;
 
+    }
+
+    public boolean areFriends(String friendUsername) {
+        if(friends == null || friends.isEmpty()){
+            return false;
+        }
+        return friends.contains(friendUsername.toLowerCase(Locale.ROOT));
+    }
+
+    public void addFriend(String username) {
+        if(friends == null){
+            friends = new ArrayList<>();
+        }
+        friends.add(username);
     }
 
     public enum Status{

@@ -15,4 +15,6 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     @Query(value = "{'userStatus': 'ACTIVE'}", fields = "{'firstName': 1, 'lastName': 1, 'username': 1}")
     List<OtherUser> findActiveUsers();
+
+    User findUserByUsername(String username);
 }

@@ -10,6 +10,15 @@ import java.util.List;
 @Repository
 public interface FriendRequestRepository extends MongoRepository<FriendRequest, String> {
 
-    @Query("{$or : [{'requester': 'testusername3', 'recipient': 'testusername2'},{'requester': 'testusername2', 'recipient': 'testusername3'}]}")
-    public List<FriendRequest> doesAFriendRequestExist(String requestor, String recipient);
+    @Query("{$or : [{'requester': ?0, 'recipient': ?1},{'requester': ?1, 'recipient': ?0}]}")
+    List<FriendRequest> doesAFriendRequestExist(String requester, String recipient);
+
+    boolean existsByRecipientAndRequester(String recipient, String requester);
+    
+    FriendRequest findByRecipientAndRequester(String recipient, String requester);
+
+    void deleteByRecipientAndRequester(String recipient, String requester);
+
+    List<FriendRequest> findByRecipientAndStatus(String recipient, int status);
+
 }
