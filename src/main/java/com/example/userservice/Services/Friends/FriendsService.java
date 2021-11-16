@@ -9,9 +9,15 @@ import com.example.userservice.Exceptions.InvalidFriendRequest;
 import com.example.userservice.Exceptions.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import com.example.userservice.Dto.NotificationMessage;
+import com.example.userservice.Repository.FriendRequestRepository;
+import com.example.userservice.Repository.UserRepository;
+import com.example.userservice.Services.Notifications.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +35,7 @@ public class FriendsService {
         this.userDao = userDao;
         this.validateFriends = validateFriends;
     }
+
 
     public List<OtherUser> findActiveUser(String currentUsername) {
         List<OtherUser> allUsers = userDao.findActiveUsers();
@@ -123,6 +130,7 @@ public class FriendsService {
 
         return allPendingRequests.stream().map(request -> userDao.findByUsername(request.getRequester()))
                 .map(user -> modelMapper.map(user, OtherUser.class)).collect(Collectors.toList());
+
     }
 
 }
