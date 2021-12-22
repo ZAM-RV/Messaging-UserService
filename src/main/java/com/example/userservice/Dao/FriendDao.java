@@ -2,6 +2,7 @@ package com.example.userservice.Dao;
 
 import com.example.userservice.Dto.FriendDto.FriendRequest;
 import com.example.userservice.Repository.FriendRequestRepository;
+import com.example.userservice.Services.Notifications.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.List;
 public class FriendDao {
 
     private final FriendRequestRepository friendRequestRepository;
+
 
     @Autowired
     public FriendDao(FriendRequestRepository friendRequestRepository) {

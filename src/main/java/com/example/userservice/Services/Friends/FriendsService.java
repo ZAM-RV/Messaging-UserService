@@ -28,14 +28,15 @@ public class FriendsService {
     private final FriendDao friendDao;
     private final UserDao userDao;
     private final ValidateFriends validateFriends;
+    private final NotificationService notificationService;
 
     @Autowired
-    public FriendsService(FriendDao friendDao, UserDao userDao, ValidateFriends validateFriends) {
+    public FriendsService(FriendDao friendDao, UserDao userDao, ValidateFriends validateFriends, NotificationService notificationService) {
         this.friendDao = friendDao;
         this.userDao = userDao;
         this.validateFriends = validateFriends;
+        this.notificationService = notificationService;
     }
-
 
     public List<OtherUser> findActiveUser(String currentUsername) {
         List<OtherUser> allUsers = userDao.findActiveUsers();
@@ -70,6 +71,7 @@ public class FriendsService {
                     .build();
 
             friendDao.save(friendRequest);
+            sendNotification(currentUsername, friendUsername, NotificationMessage.Type.FRIEND_REQUEST);
             return;
         }
         log.info("There already exists a friend request between {} and {}.", currentUsername, friendUsername);
@@ -92,6 +94,7 @@ public class FriendsService {
             userDao.save(currentUser);
 
             friendDao.deleteFriendRequest(currentUser.username(),requestorUsername);
+            sendNotification(currentUser.username(),requestorUsername, NotificationMessage.Type.ACCEPTED_FRIEND_REQUEST);
             return;
         }
         throw new InvalidFriendRequest("There is no friend request from " +requestorUsername +" to " +currentUser.username());
@@ -131,6 +134,16 @@ public class FriendsService {
         return allPendingRequests.stream().map(request -> userDao.findByUsername(request.getRequester()))
                 .map(user -> modelMapper.map(user, OtherUser.class)).collect(Collectors.toList());
 
+    }
+
+    private void sendNotification(String fromUser, String toUser, NotificationMessage.Type type){
+        NotificationMessage message = NotificationMessage.builder()
+                .from(fromUser)
+                .to(toUser)
+                .type(type)
+                .build();
+
+        notificationService.sendNotification(message);
     }
 
 }

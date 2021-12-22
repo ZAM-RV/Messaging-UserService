@@ -32,7 +32,7 @@ public class RegisterService {
 
         user.setUserStatus(User.Status.PENDING);
         String email = user.getEmail().toLowerCase(Locale.ROOT);
-        String username = user.getUsername().toLowerCase(Locale.ROOT);
+        String username = user.username().toLowerCase(Locale.ROOT);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEmail(email);
         user.username(username);
